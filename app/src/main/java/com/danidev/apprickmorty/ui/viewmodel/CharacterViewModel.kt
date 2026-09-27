@@ -1,5 +1,6 @@
 package com.danidev.apprickmorty.ui.viewmodel
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
@@ -10,6 +11,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import com.danidev.apprickmorty.data.model.RickCharacter
+import com.danidev.apprickmorty.data.repository.CharacterRepository
 
 sealed interface CharacterUiState {
     object Loading : CharacterUiState
