@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tune
@@ -37,8 +38,10 @@ private val HomeGray = Color(0xFF9AA5BA)
 
 @Composable
 fun HomeScreen(
+    favorites: List<RickCharacter> = emptyList(),
     onCharacterClick: (RickCharacter) -> Unit = {},
     onFavoritesClick: () -> Unit = {},
+    onToggleFavorite: (RickCharacter) -> Unit = {},
     viewModel: CharacterViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -169,7 +172,9 @@ fun HomeScreen(
                         items(state.characters) { character ->
                             HomeCharacterCard(
                                 character = character,
-                                onClick = { onCharacterClick(character) }
+                                isFavorite = favorites.any { it.id == character.id },
+                                onClick = { onCharacterClick(character) },
+                                onFavoriteClick = { onToggleFavorite(character) }
                             )
                         }
                     }
@@ -202,7 +207,12 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeCharacterCard(character: RickCharacter, onClick: () -> Unit) {
+private fun HomeCharacterCard(
+    character: RickCharacter,
+    isFavorite: Boolean,
+    onClick: () -> Unit,
+    onFavoriteClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -224,13 +234,14 @@ private fun HomeCharacterCard(character: RickCharacter, onClick: () -> Unit) {
                     .size(27.dp)
                     .align(Alignment.TopEnd)
                     .clip(CircleShape)
-                    .background(Color(0xAA111827)),
+                    .background(Color(0xAA111827))
+                    .clickable { onFavoriteClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorito",
-                    tint = HomeWhite,
+                    tint = if (isFavorite) Color(0xFFFF4D6D) else HomeWhite,
                     modifier = Modifier.size(17.dp)
                 )
             }
